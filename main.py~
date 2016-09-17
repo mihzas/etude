@@ -1,0 +1,32 @@
+#! /usr/bin/python3
+
+
+import json
+
+from core.board import Board
+from core.engine import Engine, STATE_BLACK_WIN, STATE_WHITE_WIN, STATE_DRAW, STATE_CONTINUE
+from simple_server import CustomTCPServer
+import uicontroller
+import core.rules
+
+
+if __name__ == '__main__':
+    board = Board()
+    engine = Engine(board)
+
+    uicontroller.print_board(engine.get_board().to_dict())
+    
+
+    state_game = engine.winning_conditions()
+
+    while state_game == STATE_CONTINUE:
+        engine.ask_about_move()
+        uicontroller.print_board(engine.get_board().to_dict())
+        state_game = engine.winning_conditions()
+
+    if state_game == STATE_BLACK_WIN:
+        print('Black win')
+    elif state_game == STATE_WHITE_WIN:
+        print('White win')
+    elif state_game == STATE_DRAW:
+        print('Draw')
